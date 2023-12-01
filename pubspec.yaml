@@ -1,0 +1,48 @@
+name: post_app
+description: A new Flutter project.
+
+# Prevent accidental publishing to pub.dev.
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.0
+  flutter_bluetooth_serial: ^0.4.0
+  scoped_model: ^2.0.0-nullsafety.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Enable generation of localized Strings from arb files.
+  generate: true
+  fonts:
+  - family: Norwester
+    fonts:
+      - asset: lib/fonts/Norwester-Regular.ttf
+  - family: Kollektif
+    fonts:
+      - asset: lib/fonts/Kollektif.ttf
+  - family: Montserrat
+    fonts:
+      - asset: lib/fonts/Montserrat-Regular.ttf
+      - asset: lib/fonts/Montserrat-Medium.ttf
+      - asset: lib/fonts/Montserrat-Italic.ttf
+
+  assets:
+    # Add assets from the images directory to the application.
+    - assets/images/
