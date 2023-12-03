@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
+
+import 'package:flutter/material.dart';
+
 import 'main_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -43,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             Text(
-              "Extra security for your packkages",
+              "Extra security for your packages",
               style: TextStyle(
                 fontFamily: 'Kollektif',
                 fontSize: 18,

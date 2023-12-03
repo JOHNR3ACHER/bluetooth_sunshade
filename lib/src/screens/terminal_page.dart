@@ -16,6 +16,7 @@ class TerminalPage extends StatefulWidget {
 class _TerminalPageState extends State<TerminalPage> {
   BluetoothConnection? connection;
   String _messageBuffer = '';
+  List<String> _receivedLines = []; // List to store received lines
 
   final TextEditingController textEditingController = TextEditingController();
   final ScrollController listScrollController = ScrollController();
@@ -72,16 +73,66 @@ class _TerminalPageState extends State<TerminalPage> {
             : isConnected
                 ? Text('Connected to ${widget.server.name}')
                 : Text('Disconnected from ${widget.server.name}')),
+        backgroundColor: Color(0xFF4C748B),
       ),
       body: SafeArea(
         child: Column(
           children: <Widget>[
             Flexible(
-              child: ListView(
+              child: ListView.builder(
                 padding: const EdgeInsets.all(12.0),
                 controller: listScrollController,
-                children: _buildMessageList(), // Display received messages
+                itemCount: _receivedLines.length,
+                itemBuilder: (context, index) {
+                  String message = _receivedLines[index];
+                  TextStyle textStyle = TextStyle(fontSize: 16.0);
+
+                  // Check the content of the received message and apply different styles or colors
+                  if (message.contains('Package') ||
+                      message.contains('package')) {
+                    textStyle = TextStyle(fontSize: 16.0, color: Colors.blue);
+                  } else if (message.contains('Go Home')) {
+                    textStyle = TextStyle(fontSize: 16.0, color: Colors.blue);
+                  } else if (message.contains('RFID Status: Access Granted.')) {
+                    textStyle = TextStyle(fontSize: 16.0, color: Colors.green);
+                  } else if (message
+                      .contains('Access denied for user with UID:')) {
+                    textStyle = TextStyle(fontSize: 16.0, color: Colors.red);
+                  }
+                  // Add more conditions as needed to customize based on the message content
+
+                  return Text(
+                    message,
+                    style: textStyle,
+                  );
+                },
               ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                ElevatedButton(
+                  onPressed: isConnected ? () => _sendMessage('1') : null,
+                  child: Text('Present Package'),
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xFF4C748B),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: isConnected ? () => _sendMessage('2') : null,
+                  child: Text('Wait For Package'),
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xFF4C748B),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: isConnected ? () => _sendMessage('3') : null,
+                  child: Text('Go Home'),
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xFF4C748B),
+                  ),
+                ),
+              ],
             ),
             Row(
               children: <Widget>[
@@ -120,28 +171,20 @@ class _TerminalPageState extends State<TerminalPage> {
     );
   }
 
-  List<Widget> _buildMessageList() {
-    List<Widget> messages = [];
-    messages.add(
-      Text(
-        _messageBuffer,
-        style: TextStyle(fontSize: 16.0),
-      ),
-    );
-    return messages;
-  }
-
   void _onDataReceived(Uint8List data) {
     setState(() {
-      _messageBuffer += utf8.decode(data);
-      int newlineIndex = _messageBuffer.indexOf('\n');
-      while (newlineIndex != -1) {
-        String line = _messageBuffer.substring(0, newlineIndex);
+      _messageBuffer += utf8.decode(data); // Append received data to buffer
+      List<String> lines = _messageBuffer.split('\n'); // Split data into lines
+
+      for (int i = 0; i < lines.length - 1; i++) {
         print(
-            'Received: $line'); // Replace with your logic for handling received data
-        _messageBuffer = _messageBuffer.substring(newlineIndex + 1);
-        newlineIndex = _messageBuffer.indexOf('\n');
+            'Received: ${lines[i]}'); // Print or process each line of received data
+        _receivedLines.add(lines[i]); // Add each line to the list
       }
+
+      _messageBuffer = lines.isNotEmpty
+          ? lines.last
+          : ''; // Store the incomplete line, if any
     });
   }
 
@@ -149,12 +192,27 @@ class _TerminalPageState extends State<TerminalPage> {
     text = text.trim();
     textEditingController.clear();
 
-    if (text.isNotEmpty && int.tryParse(text) != null) {
-      try {
-        connection!.output.add(Uint8List.fromList(utf8.encode('$text\r')));
-        await connection!.output.allSent;
-      } catch (e) {
-        print('Error sending message: $e');
+    if (text.isNotEmpty) {
+      int? parsedValue = int.tryParse(text);
+
+      if (parsedValue != null && parsedValue >= 1 && parsedValue <= 3) {
+        try {
+          // Add the valid command to the list of received lines
+          setState(() {
+            _receivedLines.add('POST Device Command: $text');
+          });
+
+          // Send the command to the Arduino
+          connection!.output.add(Uint8List.fromList(utf8.encode('$text\r')));
+          await connection!.output.allSent;
+        } catch (e) {
+          print('Error sending message: $e');
+        }
+      } else {
+        // Add a message for invalid commands to the list of received lines
+        setState(() {
+          _receivedLines.add('Invalid Command: $text, please use {1, 2, 3}');
+        });
       }
     }
   }

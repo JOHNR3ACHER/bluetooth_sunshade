@@ -79,6 +79,7 @@ class _DiscoveryPage extends State<DiscoveryPage> {
         title: isDiscovering
             ? Text('Discovering devices')
             : Text('Discovered devices'),
+        backgroundColor: Color(0xFF4C748B),
         actions: <Widget>[
           isDiscovering
               ? FittedBox(
