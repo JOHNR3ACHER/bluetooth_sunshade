@@ -86,14 +86,27 @@ class _MainPage extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter Bluetooth Serial'),
+        title: const Text('POST Bluetooth Serial'),
         backgroundColor: Color(0xFF4C748B),
       ),
       body: Container(
         child: ListView(
           children: <Widget>[
+            Container(
+              alignment: Alignment.center,
+              child: Row(
+                children: [
+                  SizedBox(width: 125),
+                  Icon(
+                    Icons.bluetooth,
+                    color: Colors.blue,
+                    size: 200,
+                  ),
+                  SizedBox(width: 50),
+                ],
+              ),
+            ),
             Divider(),
-            ListTile(title: const Text('General')),
             SwitchListTile(
               title: const Text('Enable Bluetooth'),
               value: _bluetoothState.isEnabled,
@@ -127,74 +140,7 @@ class _MainPage extends State<MainPage> {
                 ),
               ),
             ),
-            ListTile(
-              title: const Text('Local adapter address'),
-              subtitle: Text(_address),
-            ),
-            ListTile(
-              title: const Text('Local adapter name'),
-              subtitle: Text(_name),
-              onLongPress: null,
-            ),
-            ListTile(
-              title: _discoverableTimeoutSecondsLeft == 0
-                  ? const Text("Discoverable")
-                  : Text(
-                      "Discoverable for ${_discoverableTimeoutSecondsLeft}s"),
-              subtitle: const Text("PsychoX-Luna"),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Checkbox(
-                    value: _discoverableTimeoutSecondsLeft != 0,
-                    onChanged: null,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: null,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.refresh),
-                    onPressed: () async {
-                      print('Discoverable requested');
-                      final int timeout = (await FlutterBluetoothSerial.instance
-                          .requestDiscoverable(60))!;
-                      if (timeout < 0) {
-                        print('Discoverable mode denied');
-                      } else {
-                        print(
-                            'Discoverable mode acquired for $timeout seconds');
-                      }
-                      setState(() {
-                        _discoverableTimeoutTimer?.cancel();
-                        _discoverableTimeoutSecondsLeft = timeout;
-                        _discoverableTimeoutTimer =
-                            Timer.periodic(Duration(seconds: 1), (Timer timer) {
-                          setState(() {
-                            if (_discoverableTimeoutSecondsLeft < 0) {
-                              FlutterBluetoothSerial.instance.isDiscoverable
-                                  .then((isDiscoverable) {
-                                if (isDiscoverable ?? false) {
-                                  print(
-                                      "Discoverable after timeout... might be infinity timeout :F");
-                                  _discoverableTimeoutSecondsLeft += 1;
-                                }
-                              });
-                              timer.cancel();
-                              _discoverableTimeoutSecondsLeft = 0;
-                            } else {
-                              _discoverableTimeoutSecondsLeft -= 1;
-                            }
-                          });
-                        });
-                      });
-                    },
-                  )
-                ],
-              ),
-            ),
             Divider(),
-            ListTile(title: const Text('Devices discovery and connection')),
             SwitchListTile(
               title: const Text('Auto-try specific pin when pairing'),
               subtitle: const Text('Pin 1234'),
@@ -270,6 +216,25 @@ class _MainPage extends State<MainPage> {
               ),
             ),
             Divider(),
+            ListTile(title: const Text('POST Device.')),
+            Row(
+              children: [
+                SizedBox(
+                  width: 65,
+                ),
+                SizedBox(
+                  width: 300,
+                  child: Image.asset(
+                    'lib/assets/POSTpic.png',
+                    width: 432, // Adjust the width as needed
+                    //height: 400, // Adjust the height as needed
+                  ),
+                ),
+                SizedBox(
+                  width: 50,
+                ),
+              ],
+            ),
           ],
         ),
       ),

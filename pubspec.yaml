@@ -44,5 +44,7 @@ flutter:
       - asset: lib/fonts/Montserrat-Italic.ttf
 
   assets:
+  
     # Add assets from the images directory to the application.
     - assets/images/
+    - lib/assets/
