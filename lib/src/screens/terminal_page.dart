@@ -91,7 +91,7 @@ class _TerminalPageState extends State<TerminalPage> {
                   if (message.contains('Package') ||
                       message.contains('package')) {
                     textStyle = TextStyle(fontSize: 16.0, color: Colors.blue);
-                  } else if (message.contains('Go Home')) {
+                  } else if (message.contains('Going Home')) {
                     textStyle = TextStyle(fontSize: 16.0, color: Colors.blue);
                   } else if (message.contains('RFID Status: Access Granted.')) {
                     textStyle = TextStyle(fontSize: 16.0, color: Colors.green);
