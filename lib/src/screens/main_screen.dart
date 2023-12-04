@@ -230,9 +230,6 @@ class _MainPage extends State<MainPage> {
                     //height: 400, // Adjust the height as needed
                   ),
                 ),
-                SizedBox(
-                  width: 50,
-                ),
               ],
             ),
           ],
