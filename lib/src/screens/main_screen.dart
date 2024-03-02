@@ -86,8 +86,8 @@ class _MainPage extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('POST Bluetooth Serial'),
-        backgroundColor: Color(0xFF4C748B),
+        title: Center(child: const Text('BlueSun')),
+        backgroundColor: Color(0xFF0D47A1),
       ),
       body: Container(
         child: ListView(
@@ -96,11 +96,10 @@ class _MainPage extends State<MainPage> {
               alignment: Alignment.center,
               child: Row(
                 children: [
-                  SizedBox(width: 125),
-                  Icon(
-                    Icons.bluetooth,
-                    color: Colors.blue,
-                    size: 200,
+                  SizedBox(width: 50),
+                  Image(
+                    image: AssetImage('lib/assets/BlueSun.png'),
+                    width: 250,
                   ),
                   SizedBox(width: 50),
                 ],
@@ -136,7 +135,7 @@ class _MainPage extends State<MainPage> {
                 },
                 style: ButtonStyle(
                   backgroundColor:
-                      MaterialStateProperty.all<Color>(Color(0xFF4C748B)),
+                      MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
                 ),
               ),
             ),
@@ -165,71 +164,137 @@ class _MainPage extends State<MainPage> {
               },
               activeColor: Color(0xFF4C748B),
             ),
-            ListTile(
-              title: ElevatedButton(
-                  child: const Text('Explore discovered devices'),
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Color(0xFF4C748B)),
-                  ),
+            Divider(),
+            //////////////////////////////////
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final BluetoothDevice? selectedDevice =
+                          await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return DiscoveryPage();
+                          },
+                        ),
+                      );
+
+                      if (selectedDevice != null) {
+                        print(
+                            'Discovery -> selected ' + selectedDevice.address);
+                      } else {
+                        print('Discovery -> no device selected');
+                      }
+                    },
+                    child: const Text('Explore discovered devices'),
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
+                    ),
+                  ), //ElevatedButton
+                ), // Expanded
+                Spacer(),
+                Expanded(
+                    child: ElevatedButton(
                   onPressed: () async {
                     final BluetoothDevice? selectedDevice =
                         await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
-                          return DiscoveryPage();
+                          return SelectBondedDevicePage(
+                              checkAvailability: false);
                         },
                       ),
                     );
 
                     if (selectedDevice != null) {
-                      print('Discovery -> selected ' + selectedDevice.address);
+                      print('Connect -> selected ' + selectedDevice.address);
+                      _startChat(context, selectedDevice);
                     } else {
-                      print('Discovery -> no device selected');
+                      print('Connect -> no device selected');
                     }
-                  }),
+                  },
+                  child: const Text('Connect to paired device to chat'),
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
+                  ),
+                ))
+              ],
             ),
-            ListTile(
-              title: ElevatedButton(
-                child: const Text('Connect to paired device to chat'),
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Color(0xFF4C748B)),
-                ),
-                onPressed: () async {
-                  final BluetoothDevice? selectedDevice =
-                      await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return SelectBondedDevicePage(checkAvailability: false);
-                      },
-                    ),
-                  );
+            /////////////////////////////////////
 
-                  if (selectedDevice != null) {
-                    print('Connect -> selected ' + selectedDevice.address);
-                    _startChat(context, selectedDevice);
-                  } else {
-                    print('Connect -> no device selected');
-                  }
-                },
+            Divider(),
+            ListTile(
+              title: const Text('Interior Temperature'), //Temperature Needed
+              trailing: Container(
+                child: const Text('Something'),
               ),
             ),
             Divider(),
-            ListTile(title: const Text('POST Device.')),
+            ListTile(
+              title: const Text('SunShade Position'),
+              trailing: Container(
+                child: const Text('Something'),
+              ),
+            ),
+            Divider(),
             Row(
               children: [
-                SizedBox(
-                  width: 65,
-                ),
-                SizedBox(
-                  width: 300,
-                  child: Image.asset(
-                    'lib/assets/POSTpic.png',
-                    width: 432, // Adjust the width as needed
-                    //height: 400, // Adjust the height as needed
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final BluetoothDevice? selectedDevice =
+                          await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return DiscoveryPage();
+                          },
+                        ),
+                      );
+
+                      if (selectedDevice != null) {
+                        print(
+                            'Discovery -> selected ' + selectedDevice.address);
+                      } else {
+                        print('Discovery -> no device selected');
+                      }
+                    },
+                    child: const Text('Expand'),
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
+                    ),
+                  ), //ElevatedButton
+                ), // Expanded
+                Spacer(),
+                Expanded(
+                    child: ElevatedButton(
+                  onPressed: () async {
+                    final BluetoothDevice? selectedDevice =
+                        await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return SelectBondedDevicePage(
+                              checkAvailability: false);
+                        },
+                      ),
+                    );
+
+                    if (selectedDevice != null) {
+                      print('Connect -> selected ' + selectedDevice.address);
+                      _startChat(context, selectedDevice);
+                    } else {
+                      print('Connect -> no device selected');
+                    }
+                  },
+                  child: const Text('Retract'),
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
                   ),
-                ),
+                ))
               ],
             ),
           ],
