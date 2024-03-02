@@ -29,15 +29,16 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF4C748B), //Background color
+      backgroundColor: Color(0xFF0D47A1), //Background color
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "POST",
+              "BlueSun",
               style: TextStyle(
-                fontFamily: 'Norwester', // Set the font family to Norwester
+                fontFamily:
+                    'Kollektif', // Set the font family to Kollektif
                 fontSize: 48, // Set the font size to 48
                 color: Color(
                     0xFFFFFFFF), // Set the font color to white (0xFFFFFFFF)
@@ -45,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             Text(
-              "Extra security for your packages",
+              "Retractable System",
               style: TextStyle(
                 fontFamily: 'Kollektif',
                 fontSize: 18,
