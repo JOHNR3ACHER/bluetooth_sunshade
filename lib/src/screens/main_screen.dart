@@ -95,13 +95,8 @@ class _MainPage extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-<<<<<<< HEAD
         title: const Center(child: Text('BlueSun')),
         backgroundColor: const Color(0xFF0D47A1),
-=======
-        title: Center(child: const Text('BlueSun')),
-        backgroundColor: Color(0xFF0D47A1),
->>>>>>> 02511af (BlueSun update)
       ),
       body: Container(
         child: ListView(
@@ -112,11 +107,7 @@ class _MainPage extends State<MainPage> {
                 children: [
                   SizedBox(width: 50),
                   Image(
-<<<<<<< HEAD
                     image: AssetImage('lib/assets/Sun_v3.png'),
-=======
-                    image: AssetImage('lib/assets/BlueSun.png'),
->>>>>>> 02511af (BlueSun update)
                     width: 250,
                   ),
                   SizedBox(width: 50),
@@ -153,11 +144,7 @@ class _MainPage extends State<MainPage> {
                 },
                 style: ButtonStyle(
                   backgroundColor:
-<<<<<<< HEAD
                       MaterialStateProperty.all<Color>(const Color(0xFF0D47A1)),
-=======
-                      MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
->>>>>>> 02511af (BlueSun update)
                 ),
               ),
             ),
@@ -186,43 +173,26 @@ class _MainPage extends State<MainPage> {
               },
               activeColor: const Color(0xFF4C748B),
             ),
-<<<<<<< HEAD
             const Divider(),
-=======
-            Divider(),
->>>>>>> 02511af (BlueSun update)
             //////////////////////////////////
             Row(
               children: [
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
-<<<<<<< HEAD
                       final selectedDevice =
                           await Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {
                             return const DiscoveryPage();
-=======
-                      final BluetoothDevice? selectedDevice =
-                          await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return DiscoveryPage();
->>>>>>> 02511af (BlueSun update)
                           },
                         ),
                       );
 
                       if (selectedDevice != null) {
-<<<<<<< HEAD
                         connection = await BluetoothConnection.toAddress(selectedDevice.address); //creates connection
                         setState(() {this.selectedDevice = selectedDevice; }); // Update selected device
                         print('Discovery -> selected ' + selectedDevice.address);    
-=======
-                        print(
-                            'Discovery -> selected ' + selectedDevice.address);
->>>>>>> 02511af (BlueSun update)
                       } else {
                         print('Discovery -> no device selected');
                       }
@@ -230,19 +200,12 @@ class _MainPage extends State<MainPage> {
                     child: const Text('Explore discovered devices'),
                     style: ButtonStyle(
                       backgroundColor:
-<<<<<<< HEAD
                           MaterialStateProperty.all<Color>(const Color(0xFF0D47A1)),
                     ),
                   ), //ElevatedButton
                 ), // Expanded
                 
                 /*
-=======
-                          MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
-                    ),
-                  ), //ElevatedButton
-                ), // Expanded
->>>>>>> 02511af (BlueSun update)
                 Spacer(),
                 Expanded(
                     child: ElevatedButton(
@@ -268,87 +231,8 @@ class _MainPage extends State<MainPage> {
                   style: ButtonStyle(
                     backgroundColor:
                         MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
-<<<<<<< HEAD
                   ),
                 ))*/
-=======
-                  ),
-                ))
-              ],
-            ),
-            /////////////////////////////////////
-
-            Divider(),
-            ListTile(
-              title: const Text('Interior Temperature'), //Temperature Needed
-              trailing: Container(
-                child: const Text('Something'),
-              ),
-            ),
-            Divider(),
-            ListTile(
-              title: const Text('SunShade Position'),
-              trailing: Container(
-                child: const Text('Something'),
-              ),
-            ),
-            Divider(),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final BluetoothDevice? selectedDevice =
-                          await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return DiscoveryPage();
-                          },
-                        ),
-                      );
-
-                      if (selectedDevice != null) {
-                        print(
-                            'Discovery -> selected ' + selectedDevice.address);
-                      } else {
-                        print('Discovery -> no device selected');
-                      }
-                    },
-                    child: const Text('Expand'),
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
-                    ),
-                  ), //ElevatedButton
-                ), // Expanded
-                Spacer(),
-                Expanded(
-                    child: ElevatedButton(
-                  onPressed: () async {
-                    final BluetoothDevice? selectedDevice =
-                        await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return SelectBondedDevicePage(
-                              checkAvailability: false);
-                        },
-                      ),
-                    );
-
-                    if (selectedDevice != null) {
-                      print('Connect -> selected ' + selectedDevice.address);
-                      _startChat(context, selectedDevice);
-                    } else {
-                      print('Connect -> no device selected');
-                    }
-                  },
-                  child: const Text('Retract'),
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
-                  ),
-                ))
->>>>>>> 02511af (BlueSun update)
               ],
             ),
             /////////////////////////////////////
@@ -502,9 +386,4 @@ class _MainPage extends State<MainPage> {
       // }
     }
   }
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 02511af (BlueSun update)
 }
