@@ -40,13 +40,12 @@ class _SplashScreenState extends State<SplashScreen> {
                 fontFamily:
                     'Kollektif', // Set the font family to Kollektif
                 fontSize: 48, // Set the font size to 48
-                color: Color(
-                    0xFFFFFFFF), // Set the font color to white (0xFFFFFFFF)
+                color: Color(0xFFFFFFFF), // Set the font color to white (0xFFFFFFFF)
                 fontWeight: FontWeight.w100, // Set the font weight to 10%
               ),
             ),
             Text(
-              "Retractable System",
+              "Retractable Sunshade",
               style: TextStyle(
                 fontFamily: 'Kollektif',
                 fontSize: 18,
