@@ -5,8 +5,12 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
 import 'collecting_task.dart';
 import 'discovery_page.dart';
-import 'selected_bonded_device_page.dart';
-import 'terminal_page.dart';
+//import 'selected_bonded_device_page.dart';
+//import 'terminal_page.dart';
+
+import 'dart:convert';
+import 'dart:typed_data';
+
 // import './helpers/LineChart.dart';
 
 class MainPage extends StatefulWidget {
@@ -194,33 +198,6 @@ class _MainPage extends State<MainPage> {
                     ),
                   ), //ElevatedButton
                 ), // Expanded
-                Spacer(),
-                Expanded(
-                    child: ElevatedButton(
-                  onPressed: () async {
-                    final BluetoothDevice? selectedDevice =
-                        await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return SelectBondedDevicePage(
-                              checkAvailability: false);
-                        },
-                      ),
-                    );
-
-                    if (selectedDevice != null) {
-                      print('Connect -> selected ' + selectedDevice.address);
-                      _startChat(context, selectedDevice);
-                    } else {
-                      print('Connect -> no device selected');
-                    }
-                  },
-                  child: const Text('Connect to paired device to chat'),
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
-                  ),
-                ))
               ],
             ),
             /////////////////////////////////////
@@ -244,24 +221,8 @@ class _MainPage extends State<MainPage> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () async {
-                      final BluetoothDevice? selectedDevice =
-                          await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return DiscoveryPage();
-                          },
-                        ),
-                      );
-
-                      if (selectedDevice != null) {
-                        print(
-                            'Discovery -> selected ' + selectedDevice.address);
-                      } else {
-                        print('Discovery -> no device selected');
-                      }
-                    },
-                    child: const Text('Expand'),
+                    onPressed: () => _sendMessage('extend'),
+                    child: const Text('Extend'),
                     style: ButtonStyle(
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
@@ -271,24 +232,7 @@ class _MainPage extends State<MainPage> {
                 Spacer(),
                 Expanded(
                     child: ElevatedButton(
-                  onPressed: () async {
-                    final BluetoothDevice? selectedDevice =
-                        await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return SelectBondedDevicePage(
-                              checkAvailability: false);
-                        },
-                      ),
-                    );
-
-                    if (selectedDevice != null) {
-                      print('Connect -> selected ' + selectedDevice.address);
-                      _startChat(context, selectedDevice);
-                    } else {
-                      print('Connect -> no device selected');
-                    }
-                  },
+                    onPressed: () => _sendMessage('retract'),
                   child: const Text('Retract'),
                   style: ButtonStyle(
                     backgroundColor:
@@ -299,16 +243,6 @@ class _MainPage extends State<MainPage> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  void _startChat(BuildContext context, BluetoothDevice server) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) {
-          return TerminalPage(server: server);
-        },
       ),
     );
   }
@@ -341,4 +275,59 @@ class _MainPage extends State<MainPage> {
       );
     }
   }
+
+  BluetoothConnection? connection;
+  String _messageBuffer = '';
+  List<String> _receivedLines = [];
+  final TextEditingController textEditingController = TextEditingController();
+
+
+  void _onDataReceived(Uint8List data) {
+    setState(() {
+      _messageBuffer += utf8.decode(data); // Append received data to buffer
+      List<String> lines = _messageBuffer.split('\n'); // Split data into lines
+
+      for (int i = 0; i < lines.length - 1; i++) {
+        print(
+            'Received: ${lines[i]}'); // Print or process each line of received data
+        _receivedLines.add(lines[i]); // Add each line to the list
+      }
+
+      _messageBuffer = lines.isNotEmpty
+          ? lines.last
+          : ''; // Store the incomplete line, if any
+    });
+  }
+
+
+  void _sendMessage(String text) async {
+    text = text.trim();
+    textEditingController.clear();
+
+    if (text.isNotEmpty) {
+      int? parsedValue = int.tryParse(text);
+
+      if (parsedValue != null && parsedValue >= 1 && parsedValue <= 3) {
+        try {
+          // Add the valid command to the list of received lines
+          setState(() {
+            _receivedLines.add('POST Device Command: $text');
+          });
+
+          // Send the command to the Arduino
+          connection!.output.add(Uint8List.fromList(utf8.encode('$text\r')));
+          await connection!.output.allSent;
+        } catch (e) {
+          print('Error sending message: $e');
+        }
+      } else {
+        // Add a message for invalid commands to the list of received lines
+        setState(() {
+          _receivedLines.add('Invalid Command: $text, please use {1, 2, 3}');
+        });
+      }
+    }
+  }
+
+
 }
