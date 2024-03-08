@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
-import 'collecting_task.dart';
+//import 'collecting_task.dart';
 import 'discovery_page.dart';
-//import 'selected_bonded_device_page.dart';
+import 'selected_bonded_device_page.dart';
 //import 'terminal_page.dart';
 
 import 'dart:convert';
@@ -27,7 +27,7 @@ class _MainPage extends State<MainPage> {
   Timer? _discoverableTimeoutTimer;
   int _discoverableTimeoutSecondsLeft = 0;
 
-  BackgroundCollectingTask? _collectingTask;
+  //BackgroundCollectingTask? _collectingTask;
 
   bool _autoAcceptPairingRequests = false;
 
@@ -78,13 +78,13 @@ class _MainPage extends State<MainPage> {
     });
   }
 
-  @override
-  void dispose() {
-    FlutterBluetoothSerial.instance.setPairingRequestHandler(null);
-    _collectingTask?.dispose();
-    _discoverableTimeoutTimer?.cancel();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   FlutterBluetoothSerial.instance.setPairingRequestHandler(null);
+  //   _collectingTask?.dispose();
+  //   _discoverableTimeoutTimer?.cancel();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -198,6 +198,36 @@ class _MainPage extends State<MainPage> {
                     ),
                   ), //ElevatedButton
                 ), // Expanded
+                
+                /* 
+                Spacer(),
+                Expanded(
+                    child: ElevatedButton(
+                  onPressed: () async {
+                    final BluetoothDevice? selectedDevice =
+                        await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return SelectBondedDevicePage(
+                              checkAvailability: false);
+                        },
+                      ),
+                    );
+
+                    if (selectedDevice != null) {
+                      print('Connect -> selected ' + selectedDevice.address);
+                      _startChat(context, selectedDevice);
+                    } else {
+                      print('Connect -> no device selected');
+                    }
+                  },
+                  child: const Text('Connect to paired device to chat'),
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
+                  ),
+                ))
+                */
               ],
             ),
             /////////////////////////////////////
@@ -247,34 +277,35 @@ class _MainPage extends State<MainPage> {
     );
   }
 
-  Future<void> _startBackgroundTask(
-    BuildContext context,
-    BluetoothDevice server,
-  ) async {
-    try {
-      _collectingTask = await BackgroundCollectingTask.connect(server);
-      await _collectingTask!.start();
-    } catch (ex) {
-      _collectingTask?.cancel();
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error occured while connecting'),
-            content: Text("${ex.toString()}"),
-            actions: <Widget>[
-              new TextButton(
-                child: new Text("Close"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
+  // Future<void> _startBackgroundTask(
+  //   BuildContext context,
+  //   BluetoothDevice server,
+  // ) async {
+  //   try {
+  //     _collectingTask = await BackgroundCollectingTask.connect(server);
+  //     await _collectingTask!.start();
+  //   } catch (ex) {
+  //     _collectingTask?.cancel();
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error occured while connecting'),
+  //           content: Text("${ex.toString()}"),
+  //           actions: <Widget>[
+  //             new TextButton(
+  //               child: new Text("Close"),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
+
 
   BluetoothConnection? connection;
   String _messageBuffer = '';
