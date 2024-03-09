@@ -103,8 +103,6 @@ class _MainPage extends State<MainPage> {
                 children: [
                   SizedBox(width: 50),
                   Image(
-                    //image: AssetImage('lib/assets/BlueSun.png'),
-                    //image: AssetImage('lib/assets/Sun_v2.png'),
                     image: AssetImage('lib/assets/Sun_v3.png'),
                     width: 250,
                   ),
@@ -113,7 +111,7 @@ class _MainPage extends State<MainPage> {
               ),
             ),
             Divider(),
-            SwitchListTile(
+            SwitchListTile( // Enables Bluetooth
               title: const Text('Enable Bluetooth'),
               value: _bluetoothState.isEnabled,
               onChanged: (bool value) {
@@ -234,7 +232,8 @@ class _MainPage extends State<MainPage> {
               ],
             ),
             /////////////////////////////////////
-            if (true) ...[
+            ///
+            if (true) ...[ //checks if device is connected
               Divider(),
               ListTile(
                 title: const Text('Interior Temperature'), //Temperature Needed
