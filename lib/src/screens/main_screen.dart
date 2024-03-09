@@ -130,7 +130,7 @@ class _MainPage extends State<MainPage> {
               },
               activeColor: Color(0xFF4C748B),
             ),
-            ListTile(
+            ListTile( //shows bluetooth status
               title: const Text('Bluetooth status'),
               subtitle: Text(_bluetoothState.toString()),
               trailing: ElevatedButton(
@@ -145,7 +145,7 @@ class _MainPage extends State<MainPage> {
               ),
             ),
             Divider(),
-            SwitchListTile(
+            SwitchListTile( //Auto tries password
               title: const Text('Auto-try specific pin when pairing'),
               subtitle: const Text('Pin 1234'),
               value: _autoAcceptPairingRequests,
@@ -235,14 +235,14 @@ class _MainPage extends State<MainPage> {
             ///
             if (true) ...[ //checks if device is connected
               Divider(),
-              ListTile(
+              ListTile( // Interior temp
                 title: const Text('Interior Temperature'), //Temperature Needed
                 trailing: Container(
                   child: const Text('Something'),
                 ),
               ),
               Divider(),
-              ListTile(
+              ListTile( // Sunshade Position
                 title: const Text('SunShade Position'),
                 trailing: Container(
                   child: const Text('Something'),
@@ -251,9 +251,9 @@ class _MainPage extends State<MainPage> {
               Divider(),
               Row(
                 children: [
-                  Expanded(
+                  Expanded( //Extend Button
                     child: ElevatedButton(
-                      onPressed: () => _sendMessage('extend'),
+                      onPressed: () => _sendMessage('1'),
                       child: const Text('Extend'),
                       style: ButtonStyle(
                         backgroundColor:
@@ -262,9 +262,9 @@ class _MainPage extends State<MainPage> {
                     ), //ElevatedButton
                   ), // Expanded
                   Spacer(),
-                  Expanded(
+                  Expanded( //Retract Button
                       child: ElevatedButton(
-                      onPressed: () => _sendMessage('retract'),
+                      onPressed: () => _sendMessage('2'),
                     child: const Text('Retract'),
                     style: ButtonStyle(
                       backgroundColor:
@@ -341,25 +341,25 @@ class _MainPage extends State<MainPage> {
     if (text.isNotEmpty) {
       int? parsedValue = int.tryParse(text);
 
-      if (parsedValue != null && parsedValue >= 1 && parsedValue <= 3) {
+      // if (parsedValue != null && parsedValue >= 1 && parsedValue <= 3) {
         try {
           // Add the valid command to the list of received lines
-          setState(() {
-            _receivedLines.add('POST Device Command: $text');
-          });
+          // setState(() {
+          //   _receivedLines.add('POST Device Command: $text');
+          // });
 
-          // Send the command to the Arduino
+          // Send the command to the HC-05
           connection!.output.add(Uint8List.fromList(utf8.encode('$text\r')));
           await connection!.output.allSent;
         } catch (e) {
           print('Error sending message: $e');
         }
-      } else {
-        // Add a message for invalid commands to the list of received lines
-        setState(() {
-          _receivedLines.add('Invalid Command: $text, please use {1, 2, 3}');
-        });
-      }
+      // } else {
+      //   // Add a message for invalid commands to the list of received lines
+      //   setState(() {
+      //     _receivedLines.add('Invalid Command: $text, please use {1, 2, 3}');
+      //   });
+      // }
     }
   }
 
