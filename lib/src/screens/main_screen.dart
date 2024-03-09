@@ -1,5 +1,6 @@
 import 'dart:async';
-
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
@@ -8,8 +9,7 @@ import 'discovery_page.dart';
 import 'selected_bonded_device_page.dart';
 //import 'terminal_page.dart';
 
-import 'dart:convert';
-import 'dart:typed_data';
+
 
 // import './helpers/LineChart.dart';
 
@@ -78,13 +78,14 @@ class _MainPage extends State<MainPage> {
     });
   }
 
-  // @override
-  // void dispose() {
-  //   FlutterBluetoothSerial.instance.setPairingRequestHandler(null);
-  //   _collectingTask?.dispose();
-  //   _discoverableTimeoutTimer?.cancel();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    FlutterBluetoothSerial.instance.setPairingRequestHandler(null);
+    //_collectingTask?.dispose();
+    _discoverableTimeoutTimer?.cancel();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +103,9 @@ class _MainPage extends State<MainPage> {
                 children: [
                   SizedBox(width: 50),
                   Image(
-                    image: AssetImage('lib/assets/BlueSun.png'),
+                    //image: AssetImage('lib/assets/BlueSun.png'),
+                    //image: AssetImage('lib/assets/Sun_v2.png'),
+                    image: AssetImage('lib/assets/Sun_v3.png'),
                     width: 250,
                   ),
                   SizedBox(width: 50),
@@ -231,46 +234,47 @@ class _MainPage extends State<MainPage> {
               ],
             ),
             /////////////////////////////////////
-
-            Divider(),
-            ListTile(
-              title: const Text('Interior Temperature'), //Temperature Needed
-              trailing: Container(
-                child: const Text('Something'),
+            if (true) ...[
+              Divider(),
+              ListTile(
+                title: const Text('Interior Temperature'), //Temperature Needed
+                trailing: Container(
+                  child: const Text('Something'),
+                ),
               ),
-            ),
-            Divider(),
-            ListTile(
-              title: const Text('SunShade Position'),
-              trailing: Container(
-                child: const Text('Something'),
+              Divider(),
+              ListTile(
+                title: const Text('SunShade Position'),
+                trailing: Container(
+                  child: const Text('Something'),
+                ),
               ),
-            ),
-            Divider(),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => _sendMessage('extend'),
-                    child: const Text('Extend'),
+              Divider(),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => _sendMessage('extend'),
+                      child: const Text('Extend'),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
+                      ),
+                    ), //ElevatedButton
+                  ), // Expanded
+                  Spacer(),
+                  Expanded(
+                      child: ElevatedButton(
+                      onPressed: () => _sendMessage('retract'),
+                    child: const Text('Retract'),
                     style: ButtonStyle(
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
                     ),
-                  ), //ElevatedButton
-                ), // Expanded
-                Spacer(),
-                Expanded(
-                    child: ElevatedButton(
-                    onPressed: () => _sendMessage('retract'),
-                  child: const Text('Retract'),
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
-                  ),
-                ))
-              ],
-            ),
+                  ))
+                ],
+              ),
+            ],
           ],
         ),
       ),
