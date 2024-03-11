@@ -48,10 +48,11 @@ class _DiscoveryPage extends State<DiscoveryPage> {
       setState(() {
         final existingIndex = results.indexWhere(
             (element) => element.device.address == r.device.address);
-        if (existingIndex >= 0)
+        if (existingIndex >= 0){
           results[existingIndex] = r;
-        else
+        }else{
           results.add(r);
+        }
       });
     });
 
@@ -77,9 +78,9 @@ class _DiscoveryPage extends State<DiscoveryPage> {
     return Scaffold(
       appBar: AppBar(
         title: isDiscovering
-            ? Text('Discovering devices')
-            : Text('Discovered devices'),
-        backgroundColor: Color(0xFF4C748B),
+            ? const Text('Discovering devices')
+            : const Text('Discovered devices'),
+        backgroundColor: const Color(0xFF4C748B),
         actions: <Widget>[
           isDiscovering
               ? FittedBox(
@@ -91,7 +92,7 @@ class _DiscoveryPage extends State<DiscoveryPage> {
                   ),
                 )
               : IconButton(
-                  icon: Icon(Icons.replay),
+                  icon: const Icon(Icons.replay),
                   onPressed: _restartDiscovery,
                 )
         ],

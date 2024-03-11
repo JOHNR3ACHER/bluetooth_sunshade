@@ -69,7 +69,7 @@ class _SelectBondedDevicePage extends State<SelectBondedDevicePage> {
     });
   }
 
-  void _restartDiscovery() {
+  void _restartDiscovery() {//restart discovery
     setState(() {
       _isDiscovering = true;
     });
