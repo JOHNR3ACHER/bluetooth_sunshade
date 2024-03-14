@@ -4,11 +4,11 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
-//import 'collecting_task.dart';
+
 import 'discovery_page.dart';
 import 'selected_bonded_device_page.dart';
 //import 'terminal_page.dart';
-
+//import 'collecting_task.dart';
 
 
 // import './helpers/LineChart.dart';
@@ -24,12 +24,16 @@ class _MainPage extends State<MainPage> {
   String _address = "...";
   String _name = "...";
 
+  BluetoothConnection? connection;
+  BluetoothDevice? selectedDevice;
+
   Timer? _discoverableTimeoutTimer;
-  int _discoverableTimeoutSecondsLeft = 0;
+  //int _discoverableTimeoutSecondsLeft = 0;
 
   //BackgroundCollectingTask? _collectingTask;
 
   bool _autoAcceptPairingRequests = false;
+  bool get isConnected => (connection?.isConnected ?? false);
 
   @override
   void initState() {
@@ -47,7 +51,7 @@ class _MainPage extends State<MainPage> {
       if ((await FlutterBluetoothSerial.instance.isEnabled) ?? false) {
         return false;
       }
-      await Future.delayed(Duration(milliseconds: 0xDD));
+      await Future.delayed(const Duration(milliseconds: 0xDD));
       return true;
     }).then((_) {
       // Update the address field
@@ -73,7 +77,7 @@ class _MainPage extends State<MainPage> {
 
         // Discoverable mode is disabled when Bluetooth gets disabled
         _discoverableTimeoutTimer = null;
-        _discoverableTimeoutSecondsLeft = 0;
+        //_discoverableTimeoutSecondsLeft = 0;
       });
     });
   }
@@ -91,8 +95,8 @@ class _MainPage extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: const Text('BlueSun')),
-        backgroundColor: Color(0xFF0D47A1),
+        title: const Center(child: Text('BlueSun')),
+        backgroundColor: const Color(0xFF0D47A1),
       ),
       body: Container(
         child: ListView(
@@ -110,7 +114,7 @@ class _MainPage extends State<MainPage> {
                 ],
               ),
             ),
-            Divider(),
+            const Divider(),
             SwitchListTile( // Enables Bluetooth
               title: const Text('Enable Bluetooth'),
               value: _bluetoothState.isEnabled,
@@ -128,7 +132,7 @@ class _MainPage extends State<MainPage> {
                   setState(() {});
                 });
               },
-              activeColor: Color(0xFF4C748B),
+              activeColor: const Color(0xFF4C748B),
             ),
             ListTile( //shows bluetooth status
               title: const Text('Bluetooth status'),
@@ -140,11 +144,11 @@ class _MainPage extends State<MainPage> {
                 },
                 style: ButtonStyle(
                   backgroundColor:
-                      MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
+                      MaterialStateProperty.all<Color>(const Color(0xFF0D47A1)),
                 ),
               ),
             ),
-            Divider(),
+            const Divider(),
             SwitchListTile( //Auto tries password
               title: const Text('Auto-try specific pin when pairing'),
               subtitle: const Text('Pin 1234'),
@@ -167,27 +171,28 @@ class _MainPage extends State<MainPage> {
                       .setPairingRequestHandler(null);
                 }
               },
-              activeColor: Color(0xFF4C748B),
+              activeColor: const Color(0xFF4C748B),
             ),
-            Divider(),
+            const Divider(),
             //////////////////////////////////
             Row(
               children: [
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
-                      final BluetoothDevice? selectedDevice =
+                      final selectedDevice =
                           await Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {
-                            return DiscoveryPage();
+                            return const DiscoveryPage();
                           },
                         ),
                       );
 
                       if (selectedDevice != null) {
-                        print(
-                            'Discovery -> selected ' + selectedDevice.address);
+                        connection = await BluetoothConnection.toAddress(selectedDevice.address); //creates connection
+                        setState(() {this.selectedDevice = selectedDevice; }); // Update selected device
+                        print('Discovery -> selected ' + selectedDevice.address);    
                       } else {
                         print('Discovery -> no device selected');
                       }
@@ -195,12 +200,12 @@ class _MainPage extends State<MainPage> {
                     child: const Text('Explore discovered devices'),
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
+                          MaterialStateProperty.all<Color>(const Color(0xFF0D47A1)),
                     ),
                   ), //ElevatedButton
                 ), // Expanded
                 
-                /* 
+                /*
                 Spacer(),
                 Expanded(
                     child: ElevatedButton(
@@ -227,28 +232,27 @@ class _MainPage extends State<MainPage> {
                     backgroundColor:
                         MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
                   ),
-                ))
-                */
+                ))*/
               ],
             ),
             /////////////////////////////////////
             ///
-            if (true) ...[ //checks if device is connected
-              Divider(),
+            if (selectedDevice != null && connection!.isConnected) ...[ //checks if device is connected
+              const Divider(),
               ListTile( // Interior temp
                 title: const Text('Interior Temperature'), //Temperature Needed
-                trailing: Container(
+                trailing: Container( //change????
                   child: const Text('Something'),
                 ),
               ),
-              Divider(),
+              const Divider(),
               ListTile( // Sunshade Position
                 title: const Text('SunShade Position'),
-                trailing: Container(
+                trailing: Container( //change????
                   child: const Text('Something'),
                 ),
               ),
-              Divider(),
+              const Divider(),
               Row(
                 children: [
                   Expanded( //Extend Button
@@ -257,18 +261,18 @@ class _MainPage extends State<MainPage> {
                       child: const Text('Extend'),
                       style: ButtonStyle(
                         backgroundColor:
-                            MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
+                            MaterialStateProperty.all<Color>(const Color(0xFF0D47A1)),
                       ),
                     ), //ElevatedButton
                   ), // Expanded
-                  Spacer(),
+                  const Spacer(),
                   Expanded( //Retract Button
                       child: ElevatedButton(
                       onPressed: () => _sendMessage('2'),
                     child: const Text('Retract'),
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
+                          MaterialStateProperty.all<Color>(const Color(0xFF0D47A1)),
                     ),
                   ))
                 ],
@@ -310,7 +314,7 @@ class _MainPage extends State<MainPage> {
   // }
 
 
-  BluetoothConnection? connection;
+  
   String _messageBuffer = '';
   List<String> _receivedLines = [];
   final TextEditingController textEditingController = TextEditingController();
