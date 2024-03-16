@@ -277,6 +277,26 @@ class _MainPage extends State<MainPage> {
                   ))
                 ],
               ),
+              /* */
+              const Divider(),
+              Row(
+                children: [
+                  Expanded( //Extend Button
+                    child: ElevatedButton(
+                      onPressed: () async{
+                        await connection?.finish(); //creates connection
+                        setState(() {this.selectedDevice = null; }); // Update selected device
+                      },
+                      child: const Text('Disconnect'),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(const Color(0xFF0D47A1)),
+                      ),
+                    ),//ElevatedButton\
+                  ), // Expanded
+                ],
+              ),
+              
             ],
           ],
         ),
