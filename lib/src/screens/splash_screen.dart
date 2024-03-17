@@ -45,7 +45,11 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             Text(
+<<<<<<< HEAD
               "Retractable Sunshade",
+=======
+              "Retractable System",
+>>>>>>> c96281ba686fe2ae8682d27e880c92a6a3b9864f
               style: TextStyle(
                 fontFamily: 'Kollektif',
                 fontSize: 18,
