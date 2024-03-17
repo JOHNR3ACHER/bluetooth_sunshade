@@ -284,7 +284,7 @@ class _MainPage extends State<MainPage> {
                   Expanded( //Extend Button
                     child: ElevatedButton(
                       onPressed: () async{
-                        await connection?.finish(); //creates connection
+                        await connection?.finish(); //terminates connection
                         setState(() {this.selectedDevice = null; }); // Update selected device
                       },
                       child: const Text('Disconnect'),
@@ -292,7 +292,7 @@ class _MainPage extends State<MainPage> {
                         backgroundColor:
                             MaterialStateProperty.all<Color>(const Color(0xFF0D47A1)),
                       ),
-                    ),//ElevatedButton\
+                    ),//ElevatedButton
                   ), // Expanded
                 ],
               ),
