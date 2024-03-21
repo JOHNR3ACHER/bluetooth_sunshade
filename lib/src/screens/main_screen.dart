@@ -363,7 +363,7 @@ class _MainPage extends State<MainPage> {
     textEditingController.clear();
 
     if (text.isNotEmpty) {
-      int? parsedValue = int.tryParse(text);
+      //int? parsedValue = int.tryParse(text);
 
       // if (parsedValue != null && parsedValue >= 1 && parsedValue <= 3) {
         try {
@@ -373,7 +373,7 @@ class _MainPage extends State<MainPage> {
           // });
 
           // Send the command to the HC-05
-          connection!.output.add(Uint8List.fromList(utf8.encode('$text\r')));
+          connection!.output.add(Uint8List.fromList(utf8.encode(text)));
           await connection!.output.allSent;
         } catch (e) {
           print('Error sending message: $e');
