@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:post_app/src/utils/LineChart.dart';
-import 'package:post_app/src/utils/PaintStyle.dart';
+import 'package:BlueSun/src/utils/LineChart.dart';
+import 'package:BlueSun/src/utils/PaintStyle.dart';
 
 import 'collecting_task.dart';
 
