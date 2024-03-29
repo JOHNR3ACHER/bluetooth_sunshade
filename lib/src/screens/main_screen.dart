@@ -26,6 +26,8 @@ class _MainPage extends State<MainPage> {
 
   BluetoothConnection? connection;
   BluetoothDevice? selectedDevice;
+  int temp = 0;
+  String position = 'N/A';
 
   Timer? _discoverableTimeoutTimer;
   //int _discoverableTimeoutSecondsLeft = 0;
@@ -238,18 +240,18 @@ class _MainPage extends State<MainPage> {
             /////////////////////////////////////
             ///
             if (selectedDevice != null && connection!.isConnected) ...[ //checks if device is connected
-              const Divider(),
+              const Divider(),  
               ListTile( // Interior temp
                 title: const Text('Interior Temperature'), //Temperature Needed
                 trailing: Container( //change????
-                  child: const Text('Something'),
+                  child: Text('$temp'),
                 ),
               ),
               const Divider(),
               ListTile( // Sunshade Position
                 title: const Text('SunShade Position'),
                 trailing: Container( //change????
-                  child: const Text('Something'),
+                  child: Text(position),
                 ),
               ),
               const Divider(),
@@ -368,12 +370,15 @@ class _MainPage extends State<MainPage> {
       // if (parsedValue != null && parsedValue >= 1 && parsedValue <= 3) {
         try {
           // Add the valid command to the list of received lines
-          // setState(() {
-          //   _receivedLines.add('POST Device Command: $text');
-          // });
+          print('app->Pic Command: $text');
+          
 
           // Send the command to the HC-05
-          connection!.output.add(Uint8List.fromList(utf8.encode(text)));
+          //connection!.output.add(Uint8List.fromList(utf8.encode('$text\r')));
+
+          //connection!.output.add(Uint8List.fromList(utf8.encode(text)));
+          connection!.output.add(ascii.encode(text));
+
           await connection!.output.allSent;
         } catch (e) {
           print('Error sending message: $e');
