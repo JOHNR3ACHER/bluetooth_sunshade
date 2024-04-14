@@ -26,6 +26,7 @@ class _MainPage extends State<MainPage> {
 
   BluetoothConnection? connection;
   BluetoothDevice? selectedDevice;
+
   int temp = 0;
   String position = 'N/A';
 
@@ -82,6 +83,12 @@ class _MainPage extends State<MainPage> {
         //_discoverableTimeoutSecondsLeft = 0;
       });
     });
+
+    if (selectedDevice != null && connection!.isConnected){
+      connection!.input!.listen(_onDataReceived);
+    }
+    
+
   }
 
   @override
@@ -239,6 +246,7 @@ class _MainPage extends State<MainPage> {
             ),
             /////////////////////////////////////
             ///
+            
             if (selectedDevice != null && connection!.isConnected) ...[ //checks if device is connected
               const Divider(),  
               ListTile( // Interior temp
@@ -338,19 +346,29 @@ class _MainPage extends State<MainPage> {
 
   
   String _messageBuffer = '';
-  List<String> _receivedLines = [];
+  //List<String> _receivedLines = [];
   final TextEditingController textEditingController = TextEditingController();
 
 
   void _onDataReceived(Uint8List data) {
     setState(() {
-      _messageBuffer += utf8.decode(data); // Append received data to buffer
+      _messageBuffer += ascii.decode(data); // Append received data to buffer
       List<String> lines = _messageBuffer.split('\n'); // Split data into lines
+      int? parsedData = 0;
 
       for (int i = 0; i < lines.length - 1; i++) {
-        print(
-            'Received: ${lines[i]}'); // Print or process each line of received data
-        _receivedLines.add(lines[i]); // Add each line to the list
+
+        print('Received: ${lines[i]}'); // Print or process each line of received data
+
+        //_receivedLines.add(lines[i]); // Add each line to the list
+
+        parsedData = int.tryParse(lines[i]);
+
+        if(parsedData != null ){
+          temp = int.parse(lines[i]);
+        }else{
+          position = lines[i];
+        }
       }
 
       _messageBuffer = lines.isNotEmpty
@@ -365,30 +383,18 @@ class _MainPage extends State<MainPage> {
     textEditingController.clear();
 
     if (text.isNotEmpty) {
-      //int? parsedValue = int.tryParse(text);
-
-      // if (parsedValue != null && parsedValue >= 1 && parsedValue <= 3) {
         try {
           // Add the valid command to the list of received lines
           print('app->Pic Command: $text');
           
 
           // Send the command to the HC-05
-          //connection!.output.add(Uint8List.fromList(utf8.encode('$text\r')));
-
-          //connection!.output.add(Uint8List.fromList(utf8.encode(text)));
           connection!.output.add(ascii.encode(text));
 
           await connection!.output.allSent;
         } catch (e) {
           print('Error sending message: $e');
         }
-      // } else {
-      //   // Add a message for invalid commands to the list of received lines
-      //   setState(() {
-      //     _receivedLines.add('Invalid Command: $text, please use {1, 2, 3}');
-      //   });
-      // }
     }
   }
 
