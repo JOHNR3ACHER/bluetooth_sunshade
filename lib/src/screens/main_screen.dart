@@ -83,10 +83,14 @@ class _MainPage extends State<MainPage> {
         //_discoverableTimeoutSecondsLeft = 0;
       });
     });
+    
+    BluetoothConnection.toAddress(selectedDevice!.address).then((_connection) {
+      if (selectedDevice != null && connection!.isConnected){
+        connection!.input!.listen(_onDataReceived);
+      }
+    });
 
-    if (selectedDevice != null && connection!.isConnected){
-      connection!.input!.listen(_onDataReceived);
-    }
+    
     
 
   }
