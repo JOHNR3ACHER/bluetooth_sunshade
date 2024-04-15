@@ -84,12 +84,13 @@ class _MainPage extends State<MainPage> {
       });
     });
     
+    /* 
     BluetoothConnection.toAddress(selectedDevice!.address).then((_connection) {
       if (selectedDevice != null && connection!.isConnected){
         connection!.input!.listen(_onDataReceived);
       }
     });
-
+    */
     
     
 
