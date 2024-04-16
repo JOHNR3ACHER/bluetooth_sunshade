@@ -84,13 +84,12 @@ class _MainPage extends State<MainPage> {
       });
     });
     
-    /* 
-    BluetoothConnection.toAddress(selectedDevice!.address).then((_connection) {
+    /* */
       if (selectedDevice != null && connection!.isConnected){
         connection!.input!.listen(_onDataReceived);
       }
-    });
-    */
+    
+    
     
     
 
@@ -136,10 +135,11 @@ class _MainPage extends State<MainPage> {
                 // Do the request and update with the true value then
                 future() async {
                   // async lambda seems to not working
-                  if (value)
+                  if (value){
                     await FlutterBluetoothSerial.instance.requestEnable();
-                  else
+                  }else{
                     await FlutterBluetoothSerial.instance.requestDisable();
+                  }
                 }
 
                 future().then((_) {
@@ -219,8 +219,8 @@ class _MainPage extends State<MainPage> {
                   ), //ElevatedButton
                 ), // Expanded
                 
-                /*
-                Spacer(),
+                /**/
+                const Spacer(),
                 Expanded(
                     child: ElevatedButton(
                   onPressed: () async {
@@ -228,25 +228,35 @@ class _MainPage extends State<MainPage> {
                         await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
-                          return SelectBondedDevicePage(
-                              checkAvailability: false);
+                          return const SelectBondedDevicePage(checkAvailability: false);
                         },
                       ),
                     );
 
                     if (selectedDevice != null) {
-                      print('Connect -> selected ' + selectedDevice.address);
-                      _startChat(context, selectedDevice);
+                      connection = await BluetoothConnection.toAddress(selectedDevice.address); //creates connection
+                      setState(() {this.selectedDevice = selectedDevice; }); // Update selected device
+                      print('Connected to ->  ' + selectedDevice.address);    
                     } else {
-                      print('Connect -> no device selected');
+                      print('Connected to -> no device selected');
                     }
+
+                    /*  
+                      if (selectedDevice != null) {
+                        print('Connect -> selected ' + selectedDevice.address);
+                        _startChat(context, selectedDevice);
+                      } else {
+                        print('Connect -> no device selected');
+                      }
+                    */
+
                   },
-                  child: const Text('Connect to paired device to chat'),
+                  child: const Text('Connect to paired device'),
                   style: ButtonStyle(
                     backgroundColor:
                         MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
                   ),
-                ))*/
+                ))
               ],
             ),
             /////////////////////////////////////
@@ -391,7 +401,6 @@ class _MainPage extends State<MainPage> {
         try {
           // Add the valid command to the list of received lines
           print('app->Pic Command: $text');
-          
 
           // Send the command to the HC-05
           connection!.output.add(ascii.encode(text));
