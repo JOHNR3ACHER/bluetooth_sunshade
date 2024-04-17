@@ -4,14 +4,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
-
 import 'discovery_page.dart';
 import 'selected_bonded_device_page.dart';
-//import 'terminal_page.dart';
-//import 'collecting_task.dart';
-
-
-// import './helpers/LineChart.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -86,38 +80,6 @@ class _MainPage extends State<MainPage> {
         //_discoverableTimeoutSecondsLeft = 0;
       });
     });
-    
-    /* 
-      if (selectedDevice != null && connection!.isConnected){
-        connection!.input!.listen(_onDataReceived);
-      }
-    */
-    BluetoothConnection.toAddress(selectedDevice?.address).then((_connection) {
-      print('Connected to the device');
-      connection = _connection;
-      setState(() {
-        isConnecting = false;
-        isDisconnecting = false;
-      });
-
-      connection!.input!.listen(_onDataReceived).onDone(() {
-        if (isDisconnecting) {
-          print('Disconnecting locally!');
-        } else {
-          print('Disconnected remotely!');
-        }
-        if (this.mounted) {
-          setState(() {});
-        }
-      });
-    }).catchError((error) {
-      print('Cannot connect, exception occurred');
-      print(error);
-    });
-    
-    
-    
-
   }
 
   @override
@@ -133,7 +95,6 @@ class _MainPage extends State<MainPage> {
     }
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -159,16 +120,17 @@ class _MainPage extends State<MainPage> {
               ),
             ),
             const Divider(),
-            SwitchListTile( // Enables Bluetooth
+            SwitchListTile(
+              // Enables Bluetooth
               title: const Text('Enable Bluetooth'),
               value: _bluetoothState.isEnabled,
               onChanged: (bool value) {
                 // Do the request and update with the true value then
                 future() async {
                   // async lambda seems to not working
-                  if (value){
+                  if (value) {
                     await FlutterBluetoothSerial.instance.requestEnable();
-                  }else{
+                  } else {
                     await FlutterBluetoothSerial.instance.requestDisable();
                   }
                 }
@@ -179,7 +141,8 @@ class _MainPage extends State<MainPage> {
               },
               activeColor: const Color(0xFF4C748B),
             ),
-            ListTile( //shows bluetooth status
+            ListTile(
+              //shows bluetooth status
               title: const Text('Bluetooth status'),
               subtitle: Text(_bluetoothState.toString()),
               trailing: ElevatedButton(
@@ -194,7 +157,8 @@ class _MainPage extends State<MainPage> {
               ),
             ),
             const Divider(),
-            SwitchListTile( //Auto tries password
+            SwitchListTile(
+              //Auto tries password
               title: const Text('Auto-try specific pin when pairing'),
               subtitle: const Text('Pin 1234'),
               value: _autoAcceptPairingRequests,
@@ -225,8 +189,7 @@ class _MainPage extends State<MainPage> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
-                      final selectedDevice =
-                          await Navigator.of(context).push(
+                      final selectedDevice = await Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {
                             return const DiscoveryPage();
@@ -235,22 +198,25 @@ class _MainPage extends State<MainPage> {
                       );
 
                       if (selectedDevice != null) {
-                        connection = await BluetoothConnection.toAddress(selectedDevice.address); //creates connection
-                        setState(() {this.selectedDevice = selectedDevice; }); // Update selected device
-                        print('Discovery -> selected ' + selectedDevice.address);    
+                        connection = await BluetoothConnection.toAddress(
+                            selectedDevice.address); //creates connection
+                        setState(() {
+                          this.selectedDevice = selectedDevice;
+                        }); // Update selected device
+                        print(
+                            'Discovery -> selected ' + selectedDevice.address);
                       } else {
                         print('Discovery -> no device selected');
                       }
                     },
                     child: const Text('Explore discovered devices'),
                     style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(const Color(0xFF0D47A1)),
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          const Color(0xFF0D47A1)),
                     ),
                   ), //ElevatedButton
                 ), // Expanded
-                
-                /**/
+
                 const Spacer(),
                 Expanded(
                     child: ElevatedButton(
@@ -259,65 +225,77 @@ class _MainPage extends State<MainPage> {
                         await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
-                          return const SelectBondedDevicePage(checkAvailability: false);
+                          return const SelectBondedDevicePage(
+                              checkAvailability: false);
                         },
                       ),
                     );
 
                     if (selectedDevice != null) {
-                      connection = await BluetoothConnection.toAddress(selectedDevice.address); //creates connection
-                      setState(() {this.selectedDevice = selectedDevice; }); // Update selected device
-                      print('Connected to ->  ' + selectedDevice.address);    
+                      connection = await BluetoothConnection.toAddress(
+                          selectedDevice.address); //creates connection
+                      connection?.input?.listen((Uint8List data) {
+                        _onDataReceived(data);
+                      });
+                      setState(() {
+                        this.selectedDevice = selectedDevice;
+                      }); // Update selected device
+                      print('Connected to ->  ' + selectedDevice.address);
                     } else {
                       print('Connected to -> no device selected');
                     }
                   },
                   child: const Text('Connect to paired device'),
                   style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(const Color(0xFF0D47A1)),
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        const Color(0xFF0D47A1)),
                   ),
                 ))
               ],
             ),
             /////////////////////////////////////
-            
-            if (selectedDevice != null && connection!.isConnected) ...[ //checks if device is connected
-              const Divider(),  
-              ListTile( // Interior temp
+
+            if (selectedDevice != null && connection!.isConnected) ...[
+              //checks if device is connected
+              const Divider(),
+              ListTile(
+                // Interior temp
                 title: const Text('Interior Temperature'), //Temperature Needed
-                trailing: Container( 
+                trailing: Container(
                   child: Text('$temp'),
                 ),
               ),
               const Divider(),
-              ListTile( // Sunshade Position
+              ListTile(
+                // Sunshade Position
                 title: const Text('SunShade Position'),
-                trailing: Container( 
+                trailing: Container(
                   child: Text(position),
                 ),
               ),
               const Divider(),
               Row(
                 children: [
-                  Expanded( //Extend Button
+                  Expanded(
+                    //Extend Button
                     child: ElevatedButton(
                       onPressed: () => _sendMessage('1'),
                       child: const Text('Extend'),
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(const Color(0xFF0D47A1)),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            const Color(0xFF0D47A1)),
                       ),
                     ),
                   ),
                   const Spacer(),
-                  Expanded( //Retract Button
+                  Expanded(
+                    //Retract Button
                     child: ElevatedButton(
                       onPressed: () => _sendMessage('2'),
                       child: const Text('Retract'),
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(const Color(0xFF0D47A1)),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            const Color(0xFF0D47A1)),
                       ),
                     ),
                   ),
@@ -326,18 +304,21 @@ class _MainPage extends State<MainPage> {
               const Divider(),
               Row(
                 children: [
-                  Expanded( //Extend Button
+                  Expanded(
+                    //Extend Button
                     child: ElevatedButton(
-                      onPressed: () async{
+                      onPressed: () async {
                         await connection?.finish(); //creates connection
-                        setState(() {this.selectedDevice = null; }); // Update selected device
+                        setState(() {
+                          this.selectedDevice = null;
+                        }); // Update selected device
                       },
                       child: const Text('Disconnect'),
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(const Color(0xFF0D47A1)),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            const Color(0xFF0D47A1)),
                       ),
-                    ),//ElevatedButton\
+                    ), //ElevatedButton\
                   ), // Expanded
                 ],
               ),
@@ -348,41 +329,7 @@ class _MainPage extends State<MainPage> {
     );
   }
 
-  // Future<void> _startBackgroundTask(
-  //   BuildContext context,
-  //   BluetoothDevice server,
-  // ) async {
-  //   try {
-  //     _collectingTask = await BackgroundCollectingTask.connect(server);
-  //     await _collectingTask!.start();
-  //   } catch (ex) {
-  //     _collectingTask?.cancel();
-  //     showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: const Text('Error occured while connecting'),
-  //           content: Text("${ex.toString()}"),
-  //           actions: <Widget>[
-  //             new TextButton(
-  //               child: new Text("Close"),
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //               },
-  //             ),
-  //           ],
-  //         );
-  //       },
-  //     );
-  //   }
-  // }
-
-
-  
   String _messageBuffer = '';
-  //List<String> _receivedLines = [];
-  final TextEditingController textEditingController = TextEditingController();
-
 
   void _onDataReceived(Uint8List data) {
     setState(() {
@@ -391,16 +338,13 @@ class _MainPage extends State<MainPage> {
       int? parsedData = 0;
 
       for (int i = 0; i < lines.length - 1; i++) {
-
         print('Received: ${lines[i]}'); // Print or process each line of received data
-
-        //_receivedLines.add(lines[i]); // Add each line to the list
 
         parsedData = int.tryParse(lines[i]);
 
-        if(parsedData != null ){
+        if (parsedData != null) {
           temp = int.parse(lines[i]);
-        }else{
+        } else {
           position = lines[i];
         }
       }
@@ -411,10 +355,8 @@ class _MainPage extends State<MainPage> {
     });
   }
 
-
   void _sendMessage(String text) async {
     text = text.trim();
-    textEditingController.clear();
 
     if (text.isNotEmpty) {
       try {
@@ -430,4 +372,5 @@ class _MainPage extends State<MainPage> {
       }
     }
   }
+
 }
