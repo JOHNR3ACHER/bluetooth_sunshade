@@ -36,7 +36,10 @@ class _MainPage extends State<MainPage> {
   //BackgroundCollectingTask? _collectingTask;
 
   bool _autoAcceptPairingRequests = false;
+
+  bool isConnecting = true;
   bool get isConnected => (connection?.isConnected ?? false);
+  bool isDisconnecting = false;
 
   @override
   void initState() {
@@ -89,6 +92,28 @@ class _MainPage extends State<MainPage> {
         connection!.input!.listen(_onDataReceived);
       }
     
+    BluetoothConnection.toAddress(selectedDevice!.address).then((_connection) {
+      print('Connected to the device');
+      connection = _connection;
+      setState(() {
+        isConnecting = false;
+        isDisconnecting = false;
+      });
+
+      connection!.input!.listen(_onDataReceived).onDone(() {
+        if (isDisconnecting) {
+          print('Disconnecting locally!');
+        } else {
+          print('Disconnected remotely!');
+        }
+        if (this.mounted) {
+          setState(() {});
+        }
+      });
+    }).catchError((error) {
+      print('Cannot connect, exception occurred');
+      print(error);
+    });
     
     
     
@@ -100,6 +125,12 @@ class _MainPage extends State<MainPage> {
     FlutterBluetoothSerial.instance.setPairingRequestHandler(null);
     //_collectingTask?.dispose();
     _discoverableTimeoutTimer?.cancel();
+
+    if (isConnected) {
+      isDisconnecting = true;
+      connection?.dispose();
+      connection = null;
+    }
     super.dispose();
   }
 
