@@ -87,11 +87,11 @@ class _MainPage extends State<MainPage> {
       });
     });
     
-    /* */
+    /* 
       if (selectedDevice != null && connection!.isConnected){
         connection!.input!.listen(_onDataReceived);
       }
-    
+    */
     BluetoothConnection.toAddress(selectedDevice?.address).then((_connection) {
       print('Connected to the device');
       connection = _connection;
