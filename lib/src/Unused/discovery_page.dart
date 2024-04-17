@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
-import 'bluetooth_device_list_entry.dart';
+import '../screens/bluetooth_device_list_entry.dart';
 
 class DiscoveryPage extends StatefulWidget {
   /// If true, discovery starts on page start, otherwise user must press action button.
