@@ -92,7 +92,7 @@ class _MainPage extends State<MainPage> {
         connection!.input!.listen(_onDataReceived);
       }
     
-    BluetoothConnection.toAddress(selectedDevice!.address).then((_connection) {
+    BluetoothConnection.toAddress(selectedDevice?.address).then((_connection) {
       print('Connected to the device');
       connection = _connection;
       setState(() {
@@ -271,16 +271,6 @@ class _MainPage extends State<MainPage> {
                     } else {
                       print('Connected to -> no device selected');
                     }
-
-                    /*  
-                      if (selectedDevice != null) {
-                        print('Connect -> selected ' + selectedDevice.address);
-                        _startChat(context, selectedDevice);
-                      } else {
-                        print('Connect -> no device selected');
-                      }
-                    */
-
                   },
                   child: const Text('Connect to paired device'),
                   style: ButtonStyle(
@@ -291,20 +281,19 @@ class _MainPage extends State<MainPage> {
               ],
             ),
             /////////////////////////////////////
-            ///
             
             if (selectedDevice != null && connection!.isConnected) ...[ //checks if device is connected
               const Divider(),  
               ListTile( // Interior temp
                 title: const Text('Interior Temperature'), //Temperature Needed
-                trailing: Container( //change????
+                trailing: Container( 
                   child: Text('$temp'),
                 ),
               ),
               const Divider(),
               ListTile( // Sunshade Position
                 title: const Text('SunShade Position'),
-                trailing: Container( //change????
+                trailing: Container( 
                   child: Text(position),
                 ),
               ),
@@ -319,21 +308,21 @@ class _MainPage extends State<MainPage> {
                         backgroundColor:
                             MaterialStateProperty.all<Color>(const Color(0xFF0D47A1)),
                       ),
-                    ), //ElevatedButton
-                  ), // Expanded
+                    ),
+                  ),
                   const Spacer(),
                   Expanded( //Retract Button
-                      child: ElevatedButton(
+                    child: ElevatedButton(
                       onPressed: () => _sendMessage('2'),
-                    child: const Text('Retract'),
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(const Color(0xFF0D47A1)),
+                      child: const Text('Retract'),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(const Color(0xFF0D47A1)),
+                      ),
                     ),
-                  ))
+                  ),
                 ],
               ),
-              /* */
               const Divider(),
               Row(
                 children: [
@@ -352,7 +341,6 @@ class _MainPage extends State<MainPage> {
                   ), // Expanded
                 ],
               ),
-              
             ],
           ],
         ),
@@ -429,19 +417,17 @@ class _MainPage extends State<MainPage> {
     textEditingController.clear();
 
     if (text.isNotEmpty) {
-        try {
-          // Add the valid command to the list of received lines
-          print('app->Pic Command: $text');
+      try {
+        // Add the valid command to the list of received lines
+        print('app->Pic Command: $text');
 
-          // Send the command to the HC-05
-          connection!.output.add(ascii.encode(text));
+        // Send the command to the HC-05
+        connection!.output.add(ascii.encode(text));
 
-          await connection!.output.allSent;
-        } catch (e) {
-          print('Error sending message: $e');
-        }
+        await connection!.output.allSent;
+      } catch (e) {
+        print('Error sending message: $e');
+      }
     }
   }
-
-
 }
