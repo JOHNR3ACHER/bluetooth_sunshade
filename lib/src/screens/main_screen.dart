@@ -262,7 +262,7 @@ class _MainPage extends State<MainPage> {
                 // Interior temp
                 title: const Text('Interior Temperature'), //Temperature Needed
                 trailing: Container(
-                  child: Text('$temp'),
+                  child: Text('$temp'+'°F'),
                 ),
               ),
               const Divider(),
