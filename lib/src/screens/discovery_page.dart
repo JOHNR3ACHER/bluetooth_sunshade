@@ -80,7 +80,7 @@ class _DiscoveryPage extends State<DiscoveryPage> {
         title: isDiscovering
             ? const Text('Discovering devices')
             : const Text('Discovered devices'),
-        backgroundColor: const Color(0xFF4C748B),
+        backgroundColor: const Color(0xFF0D47A1),
         actions: <Widget>[
           isDiscovering
               ? FittedBox(

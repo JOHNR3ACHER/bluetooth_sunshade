@@ -275,7 +275,7 @@ class _MainPage extends State<MainPage> {
                   child: const Text('Connect to paired device'),
                   style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Color(0xFF0D47A1)),
+                        MaterialStateProperty.all<Color>(const Color(0xFF0D47A1)),
                   ),
                 ))
               ],
