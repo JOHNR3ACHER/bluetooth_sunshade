@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
-
-import 'discovery_page.dart';
 import 'selected_bonded_device_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -25,9 +23,6 @@ class _MainPage extends State<MainPage> {
   String position = 'N/A';
 
   Timer? _discoverableTimeoutTimer;
-  //int _discoverableTimeoutSecondsLeft = 0;
-
-  //BackgroundCollectingTask? _collectingTask;
 
   bool _autoAcceptPairingRequests = false;
 
@@ -85,7 +80,6 @@ class _MainPage extends State<MainPage> {
   @override
   void dispose() {
     FlutterBluetoothSerial.instance.setPairingRequestHandler(null);
-    //_collectingTask?.dispose();
     _discoverableTimeoutTimer?.cancel();
 
     if (isConnected) {
@@ -109,7 +103,7 @@ class _MainPage extends State<MainPage> {
             Container(
               alignment: Alignment.center,
               child: Row(
-                children: [
+                children: const [
                   SizedBox(width: 50),
                   Image(
                     image: AssetImage('lib/assets/Sun_v3.png'),
@@ -228,9 +222,9 @@ class _MainPage extends State<MainPage> {
               const Divider(),
               ListTile(
                 // Interior temp
-                title: const Text('Interior Temperature'), //Temperature Needed
+                title: const Text('Interior Temperature'),
                 trailing: Container(
-                  child: Text('$temp'+'°F'),
+                  child: Text('$temp''°F'),
                 ),
               ),
               const Divider(),
