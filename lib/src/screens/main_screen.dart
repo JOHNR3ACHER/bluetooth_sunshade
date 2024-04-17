@@ -187,38 +187,6 @@ class _MainPage extends State<MainPage> {
             Row(
               children: [
                 Expanded(
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final selectedDevice = await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return const DiscoveryPage();
-                          },
-                        ),
-                      );
-
-                      if (selectedDevice != null) {
-                        connection = await BluetoothConnection.toAddress(
-                            selectedDevice.address); //creates connection
-                        setState(() {
-                          this.selectedDevice = selectedDevice;
-                        }); // Update selected device
-                        print(
-                            'Discovery -> selected ' + selectedDevice.address);
-                      } else {
-                        print('Discovery -> no device selected');
-                      }
-                    },
-                    child: const Text('Explore discovered devices'),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          const Color(0xFF0D47A1)),
-                    ),
-                  ), //ElevatedButton
-                ), // Expanded
-
-                const Spacer(),
-                Expanded(
                     child: ElevatedButton(
                   onPressed: () async {
                     final BluetoothDevice? selectedDevice =
